@@ -27,38 +27,26 @@ From initial to final goal/configuration. For example, multiple iterations of ro
 
 ###Observed Data
 
------- Vegetable Grating -----
-Demonstration of a Carrot Grating Task consisting of 
-12 (7-d) time-series X = {x_1,..,x_T} with variable length T. 
-
+##Vegetable Grating 
+Demonstration of a Carrot Grating Task consisting of 12 (7-d) time-series X = {x_1,..,x_T} with variable length T.  
 Dimensions:
 x = {pos_x, pos_y, pos_z, q_i, q_j, q_k, q_w}
 
 
------- Dough Rolling -----
-**Raw Data**
-Demonstration of a Dough Rolling Task consisting of 
-5 (13-d) time-series X = {x_1,..,x_T} with variable length T. 
-
-Dimensions:
-x = {pos_x, pos_y, pos_z, q_i, q_j, q_k, q_w, f_x, f_y, f_z, tau_x, tau_y, tau_z}
-
-**Processed Data**
-Demonstration of a Dough Rolling Task consisting of 
-15 (12-d) time-series X = {x_1,..,x_T} with variable length T. 
-
+##Dough Rolling
+Demonstration of a Dough Rolling Task consisting of 15 (12-d) time-series X = {x_1,..,x_T} with variable length T.  
 Dimensions:
 x = {pos_x, pos_y, pos_z, roll, pitch , yaw, f_x, f_y, f_z, tau_x, tau_y, tau_z}
 
------- Peeling -----
-Demonstration of a Peeling Task consisting of 2 (13-d) time-series X = {x_1,..,x_T} with variable length T. 
+##Peeling
+Demonstration of a Peeling Task consisting of 2 (13-d) time-series X = {x_1,..,x_T} with variable length T.  
 Dimensions:
 x = {pos_x, pos_y, pos_z, q_i, q_j, q_k, q_w, f_x, f_y, f_z, tau_x, tau_y, tau_z}
 
 ---
 
 ##Task-Wrench-Space Primitives
-The dataset currently contains Task-Wrench-Space Primitives, which are 6-dimensional Ellipsoids indicating force/torque space used in specific task.
+The dataset currently contains Task-Wrench-Space Primitives, which are 6-dimensional Ellipsoids indicating force/torque space used in specific tasks.
 
 ###Tasks
 - Cuting
