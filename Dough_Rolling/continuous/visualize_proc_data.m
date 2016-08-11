@@ -30,7 +30,7 @@ figure('Color', [1 1 1])
 for i=1:N
     cart_ee_traj = Xn{i};
     
-    % Plot Trejectories
+    % Plot TrAjectories
     plot3(cart_ee_traj(1,:), cart_ee_traj(2,:),cart_ee_traj(3,:), '-','Color',[rand rand rand],'LineWidth',1); hold on
     
     % Plot Starting and End Points
@@ -79,6 +79,4 @@ close all;
 for i=1:N
     plotEEData(Xn{i}, [], sprintf('Dough Rolling Time Series %d',i)); 
 end
-
-
 

@@ -27,12 +27,37 @@ close all;
 % Altogether
 figure('Color', [1 1 1])
 for i=1:N
+    
     cart_ee_traj = EE_CART_Pn{i};
+    % Plot TrAjectories
     plot3(cart_ee_traj(1,:), cart_ee_traj(2,:),cart_ee_traj(3,:), '-','Color',[rand rand rand],'LineWidth',1); hold on
+     
+    % Plot Starting and End Points
+    start_points = [cart_ee_traj(1,1), cart_ee_traj(2,1),cart_ee_traj(3,1)];
+    end_points   = [cart_ee_traj(1,end),cart_ee_traj(2,end),cart_ee_traj(3,end)];
+    scatter3(start_points(:,1),start_points(:,2),start_points(:,3), 70, [0 1 0], 'filled'); hold on;    
+    scatter3(end_points(:,1),end_points(:,2),end_points(:,3),70, [1 0 0], 'filled'); hold on;
+    
+    % Draw some frame of Start-end Trajectories
+    H = EE_Hn{i};
+    drawframe(H(:,:,1),0.02); 
+    drawframe(H(:,:,end),0.02);
+     
 end
 grid on 
 xlabel('x');ylabel('y');zlabel('z');
 title(sprintf('%d Dough Rolling Recordings (Color Indicates different time-series)',N))
+
+% Set Reference Frames
+Robot_Base   = eye(4);
+Rolling_Board = Table_Hn{1}(:,:,1);
+visualizeRollingEnvironment(Robot_Base, Rolling_Board);
+
+axis tight
+grid on 
+xlabel('x');ylabel('y');zlabel('z');
+title(sprintf('%d Dough Rolling Recordings (Color Indicates different time-series)',N))
+
 
 % Per time-series
 rc = ceil(sqrt(N));

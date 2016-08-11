@@ -1,0 +1,70 @@
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Extract Segmented Data from tGau-BP-HMM Results
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clear all; close all; clc;
+load('proc-data.mat')
+% Remove first time-series (not used)
+Xn_seg = {};
+N = length(Xn);
+for i = 2:N
+    Xn_seg{i-1,1} = Xn{i};
+end
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Load Results from tGau-BP-HMM
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+load('seg-results.mat')
+% Variables needed from tGau-BP-HMM Results
+%   - Robotdata
+%   - bestGauPsi
+%   - bestGauPsiTrans
+%   - groups
+
+% Visualize Segmentation and Sigma-Clustering
+[ Clust_results Segm_results Total_feats] = GetSegmentationResults(Robotdata, bestGauPsi, [1:Robotdata.N], 'Best estimated State Sequences', groups);
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Plot Segmented Trajectories with BP-HMM on 3D Cartesian Space
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Select which sequences to visualize
+seq = [1 3 5 7 10 12];
+
+figure('Color',[1 1 1])
+
+% Plot 3D Trajectories of Recordings with Colors Indicating Sequences
+plotSegmentedData( Xn_seg, seq , Total_feats, Segm_results);
+
+% Set Reference Frames
+Robot_Base   = eye(4);
+Rolling_Board = Table_Hn{1}(:,:,1);
+visualizeRollingEnvironment(Robot_Base, Rolling_Board);
+
+axis tight
+grid on 
+xlabel('x');ylabel('y');zlabel('z');
+title(sprintf('%d Dough Rolling Recordings (Color Indicates Segments Extracted by BP-HMM)',length(seq)))
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Plot Segmented Trajectories with tGau-BP-HMM on 3D Cartesian Space
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Select which sequences to visualize
+seq = [1 3 5 7 10 12];
+
+figure('Color',[1 1 1])
+
+% Plot 3D Trajectories of Recordings with Colors Indicating Sequences
+plotSegmentedData( Xn_seg, seq , Total_feats, Segm_results);
+
+% Set Reference Frames
+Robot_Base   = eye(4);
+Rolling_Board = Table_Hn{1}(:,:,1);
+visualizeRollingEnvironment(Robot_Base, Rolling_Board);
+
+axis tight
+grid on 
+xlabel('x');ylabel('y');zlabel('z');
+title(sprintf('%d Dough Rolling Recordings (Color Indicates Segments Extracted by BP-HMM)',length(seq)))
+
