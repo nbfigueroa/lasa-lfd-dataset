@@ -1,0 +1,103 @@
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The Dough-Rolling processed (smoothed f/t trajactories, fixed rotation
+% discontinuities and sub-sampled) data contains end-effector:
+% - positions:         Xn{i}(1:3,:)   (3-d: x, y, z)
+% - orientations:      Xn{i}(4:6,:)   (3-d: roll, pitch, yaw)
+% - forces:            Xn{i}(7:9,:)   (3-d: f_x, f_y, f_z)
+% - torques:           Xn{i}(10:12,:) (3-d: tau_x, tau_y, tau_z)
+%
+% PROC DATA Sampling Rate: 100Hz
+%   
+% Details:
+%    - Each time-series contains 3 - 4 iterations of a rolling sequence, 
+%      consisting of a sequence of sub-actions:
+%      1.- reach
+%      2.- roll
+%      3.- back
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clear all;clc;
+load('proc-data.mat')
+N = length(Xn);
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Visualize Cartesian EE Trajectories in 3D Task Space
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+close all;
+% Altogether with table and Reference Frames
+
+figure('Color', [1 1 1])
+for i=1:N
+    cart_ee_traj = Xn{i};
+    
+    % Plot Trejectories
+    plot3(cart_ee_traj(1,:), cart_ee_traj(2,:),cart_ee_traj(3,:), '-','Color',[rand rand rand],'LineWidth',1); hold on
+    
+    % Plot Starting and End Points
+    start_points = [cart_ee_traj(1,1), cart_ee_traj(2,1),cart_ee_traj(3,1)];
+    end_points   = [cart_ee_traj(1,end),cart_ee_traj(2,end),cart_ee_traj(3,end)];
+    scatter3(start_points(:,1),start_points(:,2),start_points(:,3), 100, [0 1 0], 'filled'); hold on;    
+    scatter3(end_points(:,1),end_points(:,2),end_points(:,3),100, [1 0 0], 'filled'); hold on;
+    
+    % Draw some frame of Start-end Trajectories
+    H = EE_HnP{i};
+    drawframe(H(:,:,1),0.01); 
+    drawframe(H(:,:,end),0.01);
+    
+end
+
+visualizeRollingnvironment()
+
+% Set Reference Frames
+Robot_Base   = eye(4);
+Rolling_Board = Table_Hn{1}(:,:,1);
+
+% Draw Important Reference Frames
+text(Robot_Base(1,end) + 0.03, Robot_Base(2,end) + 0.03, Robot_Base(3,end) + 0.03,'Robot Base','FontSize',8, 'Color', [0 0 1]);
+drawframe(Robot_Base,0.05)
+
+text(Rolling_Board(1,end) + 0.03, Rolling_Board(2,end) + 0.03, Rolling_Board(3,end) + 0.03,'Rolling Board','FontSize', 8, 'Color', [1 0 0]);
+drawframe(Rolling_Board,0.05)
+
+% Draw Rolling Board
+table_off = 0.02;
+table_width = 0.56;
+table_height = 0.75;
+
+Table_Origin = Rolling_Board;
+Table_Edge1 = eye(4); Table_Edge2 = eye(4); Table_Edge3 = eye(4); Table_Edge4 = eye(4);
+Table_Edge1(1:3,4) = [-table_off 0 table_off]'; Table_Edge1 = Table_Origin*Table_Edge1;
+Table_Edge2(1:3,4) = [0 0 -table_width]'; Table_Edge2 = Table_Edge1*Table_Edge2;
+Table_Edge3(1:3,4) = [table_height 0 -table_width]'; Table_Edge3 = Table_Edge1*Table_Edge3;
+Table_Edge4(1:3,4) = [table_height 0 0]'; Table_Edge4 = Table_Edge1*Table_Edge4;
+fill3([Table_Edge1(1,4) Table_Edge2(1,4) Table_Edge3(1,4) Table_Edge4(1,4)],[Table_Edge1(2,4) Table_Edge2(2,4) Table_Edge3(2,4) Table_Edge4(2,4)],[Table_Edge1(3,4) Table_Edge2(3,4) Table_Edge3(3,4) Table_Edge4(3,4)],[0.5 0.5 0.5])
+    
+axis tight
+grid on 
+xlabel('x');ylabel('y');zlabel('z');
+title(sprintf('%d Dough Rolling Recordings (Color Indicates different time-series)',N))
+
+
+% Per time-series
+rc = ceil(sqrt(N));
+figure('Color', [1 1 1])
+for i=1:N
+    subplot(rc,rc,i);
+    cart_ee_traj = Xn{i};
+    plot3(cart_ee_traj(1,:), cart_ee_traj(2,:),cart_ee_traj(3,:), '-','Color',[rand rand rand],'LineWidth',1);
+    grid on 
+    xlabel('x');ylabel('y');zlabel('z');
+    title(sprintf('Dough Rolling Recording %d',i))
+end
+suptitle('3-4 Rolling Sequences per Time-Series')
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Visualize Full EE Data Time-Series
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+close all;
+% Altogether
+for i=1:N
+    plotEEData(Xn{i}, [], sprintf('Dough Rolling Time Series %d',i)); 
+end
+
+
+
