@@ -19,6 +19,7 @@
 clear all;clc;
 load('raw-data.mat')
 N = length(EE_CART_Pn);
+
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Visualize Cartesian EE Trajectories in 3D Space
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -27,7 +28,7 @@ close all;
 figure('Color', [1 1 1])
 for i=1:N
     cart_ee_traj = EE_CART_Pn{i};
-    plot3(cart_ee_traj(1,:), cart_ee_traj(2,:),cart_ee_traj(3,:), '--','Color',[rand rand rand],'LineWidth',2); hold on
+    plot3(cart_ee_traj(1,:), cart_ee_traj(2,:),cart_ee_traj(3,:), '-*','Color',[rand rand rand],'LineWidth',0.5,'MarkerSize',1); hold on
 end
 grid on 
 xlabel('x');ylabel('y');zlabel('z');
@@ -39,7 +40,7 @@ figure('Color', [1 1 1])
 for i=1:N
     subplot(rc,rc,i);
     cart_ee_traj = EE_CART_Pn{i};
-    plot3(cart_ee_traj(1,:), cart_ee_traj(2,:),cart_ee_traj(3,:), '--','Color',[rand rand rand],'LineWidth',2);
+    plot3(cart_ee_traj(1,:), cart_ee_traj(2,:),cart_ee_traj(3,:), '-*','Color',[rand rand rand],'LineWidth',0.5,'MarkerSize',1);
     grid on 
     xlabel('x');ylabel('y');zlabel('z');
     title(sprintf('Dough Rolling Recording %d',i))
@@ -49,7 +50,7 @@ suptitle('3-4 Rolling Sequences per Time-Series')
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Visualize Full EE Data Time-Series
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-close all;
+% close all;
 % Altogether
 for i=1:N
     X = [EE_CART_Pn{i};EE_CART_On{i};EE_FTn{i}];

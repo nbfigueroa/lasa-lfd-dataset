@@ -19,7 +19,7 @@ legend('x','y','z')
 f_start = 8;
 t_start = 11;
 subplot(4,1,2);
-if D == 7    
+if D == 13    
     plot(t - begin_time, X(4:7,:)','-');
     legend('q_w','q_i', 'q_j', 'q_k')
 else
