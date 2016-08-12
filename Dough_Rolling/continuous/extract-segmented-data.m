@@ -91,14 +91,13 @@ end
 A = A/N;
 
 % Compute Initial Distribution from Counts
-% overall_patterns  = [];
 possible_sequence = [];
 counts = [];
 k = 0;
 for j=1:length(obs_seq)
     patterns = find_patterns(obs_seq{j});
     for i=1:length(patterns)
-        if length(patterns{i,1}) == feats
+        if length(patterns{i,1}) == feats % Could be >2 to find sub-sequences
             possible_sequence = [possible_sequence; patterns{i,1}];
             counts    = [counts; patterns{i,2}];
         end
@@ -125,10 +124,10 @@ end
 
 [best_prob best_seq_id] = max(prob_seq);
 
-% Task (Action) Sequence should be Executed in the following order:
+% Task (Feat) Sequence should be Executed in the following order:
 task_sequence = unique_sequences(best_seq_id, :);
 
-% Replace IDs with high-level actions (clusters)
+% Replace Feat IDs with high-level Actions (clusters)
 tmp_task_sequence = [];
 for i=1:length(task_sequence)
     feat =  task_sequence(i);    
@@ -139,35 +138,92 @@ final_task_sequence = [];
 for i=1:length(tmp_task_sequence)
     curr = tmp_task_sequence(i);
     if i == 1 || curr ~=tmp_task_sequence(i-1)
-        final_task_sequence = [final_task_sequence curr]
+        final_task_sequence = [final_task_sequence curr];
     end    
 end
 
+display(final_task_sequence)
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Extract Time-Series Segments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clc; close all;
 
-% Per-Action Sequnces
-action_sequences = [];
-% for i=1:length(Xn_seg)
-for i=1:1
-    ts_seq = Clust_results{1};
+% Unique Cluster Assignments per Time-Series
+uni_clust_results = [];
+for ii=1:length(Xn_seg)
+    ts_seq = Clust_results{ii};
     unique_seq = [];
     for i=2:length(ts_seq)
         if ts_seq(i-1,1)~=ts_seq(i,1)
             unique_seq = [unique_seq; ts_seq(i-1,:)];
         end
-    end
-    ind=strfind(reshape(unique_seq(:,1),1,[]),final_task_sequence);
-    
-    % Number of Repeated Sequences
-    n_seq = length(ind);
-    
-    
+    end    
+    uni_clust_results{ii} = unique_seq;    
 end
 
 
-% Per-Action
+% Per-task sequences (Same action sequence in each time-series)
+inf_action_sequence = final_task_sequence;
+Xn_seg = Xn_seg;
 
+% extractActionSequences(inf_action_sequence, uni_cluster_results, Xn_seg)
+action_sequences = [];
+k = 0;
+for ii=1:length(Xn_seg)
+    unsegmented_ts = Xn_seg{ii};
+    ts_action_assign = Uni_clust_results{ii};
+    
+    % Find the ordered sequence withing time-series
+    ind=strfind(reshape(ts_action_assign(:,1),1,[]),inf_action_sequence);
+    
+    % Number of Repeated Sequences
+    n_seq = length(ind);
+    n_act = length(inf_action_sequence);
+        
+    % Extract Sequences    
+    for jj=1:n_seq
+        k = k + 1;
+        if ind(jj) == 1        
+            start_seq = 1            
+        else
+            start_seq =  ts_action_assign(ind(jj)-1,2)
+        end
+        end_seq   = ts_action_assign(ind(jj)+n_act-1,2)        
+                
+        act_assign = ts_action_assign(ind(jj):ind(jj)+n_act-1,:);
+        one_sequence_in_ts = unsegmented_ts(:,start_seq:end_seq);
+        seq_offset = act_assign(end,2) - length(one_sequence_in_ts)
+        act_assign(:,2) = act_assign(:,2) - seq_offset;
+        act_segms = [];
+        for kk=1:length(inf_action_sequence)
+            if kk==1
+                start_action = 1;
+            else
+                start_action = act_assign(kk-1,2)
+            end
+            act_segms = [act_segms; start_action act_assign(kk,2)]
+        end
+        
+        act_labels = [];
+        act_labels = [act_labels inf_action_sequence(1)];
+        for kk=1:length(inf_action_sequence)
+            act_labels = [act_labels ones(1,act_segms(kk,2)-act_segms(kk,1))*inf_action_sequence(kk)];
+        end
+        one_sequence_in_ts = [one_sequence_in_ts;act_labels];
+        action_sequences{k,1} = one_sequence_in_ts;        
+    end
+end
+
+
+figure('Color',[1 1 1])
+rc = ceil(sqrt(length(Xn_seg)));
+plot3(one_sequence_in_ts(1,:),one_sequence_in_ts(2,:),one_sequence_in_ts(3,:),'-.','LineWidth',2); hold on
+xlabel('x');ylabel('y');zlabel('z');
+title(sprintf('Time-Series %d',ii))
+grid on;
+axis tight;
+
+% Per-Action (each time series is an individual action)
+% extractActions(inf_action_sequence, uni_cluster_results, Xn_seg)
 
