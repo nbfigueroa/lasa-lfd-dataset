@@ -49,7 +49,7 @@ end
 
 % Set Reference Frames
 Robot_Base   = eye(4);
-Rolling_Board = Table_Hn{1}(:,:,1);
+Rolling_Board = table_frame;
 visualizeRollingEnvironment(Robot_Base, Rolling_Board);
 
 axis tight

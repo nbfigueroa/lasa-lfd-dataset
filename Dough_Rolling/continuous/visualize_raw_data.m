@@ -20,7 +20,7 @@ clear all;clc;
 load('raw-data.mat')
 N = length(EE_CART_Pn);
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Visualize Cartesian EE Trajectories in 3D Space
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 close all;
@@ -50,7 +50,7 @@ title(sprintf('%d Dough Rolling Recordings (Color Indicates different time-serie
 
 % Set Reference Frames
 Robot_Base   = eye(4);
-Rolling_Board = Table_Hn{1}(:,:,1);
+Rolling_Board = table_frame;
 visualizeRollingEnvironment(Robot_Base, Rolling_Board);
 
 axis tight
