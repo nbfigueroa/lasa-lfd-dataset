@@ -50,7 +50,7 @@ title(sprintf('%d Dough Rolling Sequences extracted with tGau-BP-HMM \n (Color I
 
 
 %% %%%%%%%%  Visualize Full EE Variables as Time_Series %%%%%%%%%%
-seq = [1:7:M];
+seq = [1];
 for i=1:length(seq)
-    plotLabeledEEData(action_sequences{seq(i)}, [], sprintf('Dough Rolling Sequence %d',seq(i))); 
+    plotLabeledEEData(action_sequences{seq(i)}, [], my_color_map, sprintf('Dough Rolling Sequence %d',seq(i))); 
 end

@@ -12,10 +12,11 @@ begin_time = t(1);
 xs = 1:N;    
 
 
+
 figure('Color', [1 1 1]);
 subplot(4,1,1);
 ys = linspace(min(min(X(1:3,:))), max(max(X(1:3,:))),M);
-imagesc(xs,ys,X(D,:));hold on;
+imagesc(xs,ys,X(D,:),'CDataMapping','scaled');hold on;
 alpha(0.3)
 plot(t - begin_time, X(1:3,:)','-.', 'LineWidth',2);hold on;
 legend('x','y','z')
@@ -25,8 +26,8 @@ f_start = 8;
 t_start = 11;
 subplot(4,1,2);
 if D == 14
-    imagesc(xs,ys,X(D,:));hold on;
     ys = linspace(min(min(X(4:7,:))), max(max(X(4:7,:))),M);
+    imagesc(xs,ys,X(D,:));hold on;
     alpha(0.3)
     plot(t - begin_time, X(4:7,:)','-.', 'LineWidth',2);
     legend('q_w','q_i', 'q_j', 'q_k')
