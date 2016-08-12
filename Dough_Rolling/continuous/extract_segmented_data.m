@@ -70,9 +70,9 @@ xlabel('x');ylabel('y');zlabel('z');
 title(sprintf('%d Dough Rolling Recordings \n(Color Indicates Segments Extracted by tGau-BP-HMM)',length(seq)))
 
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Extract Most Likely Sequence
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Extract Most Likely Sequence (from Journal paper: Figueroa and Billard, blabla)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 feats = length(Total_feats);
 kappa = bestGauPsi.kappa;
@@ -171,21 +171,30 @@ Xn_seg = Xn_seg;
 [ action_sequences ] = extractActionSequences(inf_action_sequence, uni_clust_results, Xn_seg);
 
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Visualize Extracted Rolling Sequences from tGau-BP-HMM
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Visualize Extracted Rolling Sequences (Actions) from tGau-BP-HMM
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clc;
 % Select the Sequences to Visualize
 M = length(action_sequences);
-seq = [1:5];
+seq = [1:M];
 
 %%%%%%%%%%  Visualize 3D trajectories %%%%%%%%%%
 figure('Color',[1 1 1])
+clear actions;
+actions.sequence = inf_action_sequence;
+actions_data = {};
 for i=1:length(seq)
   sequence = action_sequences{seq(i)};  
-  plot3(sequence(1,:),sequence(2,:),sequence(3,:)); hold on;
+  for j=1:length(inf_action_sequence)
+    action            = inf_action_sequence(j);
+    action_ids        = find(sequence(size(sequence,1),:) == action);
+    action_data       = sequence(1:end-1,action_ids);
+    actions_data{i,j} = action_data;  
+    plot3(action_data(1,:),action_data(2,:),action_data(3,:), 'Color', my_color_map(action,:)); hold on;
+  end
 end
+actions.data = actions_data;
 
 % Set Reference Frames
 Robot_Base   = eye(4);
@@ -195,14 +204,5 @@ visualizeRollingEnvironment(Robot_Base, Rolling_Board);
 axis tight
 grid on 
 xlabel('x');ylabel('y');zlabel('z');
-title(sprintf('%d Dough Rolling Sequences extracted with tGau-BP-HMM \n (Color Indicates different sequences)',length(seq)))
-
-
-%%%%%%%%%%  Visualize Full EE Variables as Time_Series %%%%%%%%%%
-
-for i=1:length(seq)
-    plotEEData(action_sequences{seq(i)}, [], sprintf('Dough Rolling Sequence %d',seq(i))); 
-end
-
-
+title(sprintf('%d Dough Rolling Sequences extracted with tGau-BP-HMM \n (Colors Correspond to Segmented Actions)',length(seq)))
 
