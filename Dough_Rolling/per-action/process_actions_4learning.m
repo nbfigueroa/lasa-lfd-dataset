@@ -41,7 +41,11 @@ figure('Color',[1 1 1])
 hist(action_lengths);hold on
 mode(action_lengths)
 std(action_lengths)
-%%
+
+% Disclaimer: The following pre-processing steps are considering that we 
+% will learn a Dynamical System for pos/orientation encoded as a GMM.
+% The most important preprocessing step is to check that all trajectories 
+% end at 0 velocity; i.e. converge at the attractor.
 min_lengths = length(Phase1(1).in_dough.EE_POS);
 for ii=1:length(Phase1)   
         min_lengths = [min_lengths length(Phase1(ii).in_dough.EE_POS)];
@@ -78,7 +82,3 @@ for jj=1:9
     end
 end
 
-% Disclaimer: The following pre-processing steps are considering that we 
-% will learn a Dynamical System for pos/orientation encoded as a GMM.
-% The most important preprocessing step is to check that all trajectories 
-% end at 0 velocity; i.e. converge at the attractor.
