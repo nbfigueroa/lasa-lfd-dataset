@@ -1,9 +1,9 @@
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % The Dough-Rolling sequence contain end-effector:
-% - positions:         act{i}(1:3,:)   (3-d: x, y, z)
-% - orientations:      Xn{i}(4:6,:)   (3-d: roll, pitch, yaw)
-% - forces:            Xn{i}(7:9,:)   (3-d: f_x, f_y, f_z)
-% - torques:           Xn{i}(10:12,:) (3-d: tau_x, tau_y, tau_z)
+% - positions:         action_sequence{i}(1:3,:)   (3-d: x, y, z)
+% - orientations:      action_sequence{i}(4:7,:)   (4-d: q_i, q_j, q_k, q_w)
+% - forces:            action_sequence{i}(8:10,:)  (3-d: f_x, f_y, f_z)
+% - torques:           action_sequence{i}(11:13,:) (3-d: tau_x, tau_y, tau_z)
 %
 % PROC DATA Sampling Rate: 100Hz
 %   
@@ -50,7 +50,7 @@ title(sprintf('%d Dough Rolling Sequences extracted with tGau-BP-HMM \n (Color I
 
 
 %% %%%%%%%%  Visualize Full EE Variables as Time_Series %%%%%%%%%%
-seq = [1];
+seq = [1:5:M];
 for i=1:length(seq)
-    plotLabeledEEData(action_sequences{seq(i)}, [], my_color_map, sprintf('Dough Rolling Sequence %d',seq(i))); 
+    plotLabeledEEData(action_sequences{seq(i)}, [], sprintf('Dough Rolling Sequence %d',seq(i))); 
 end
