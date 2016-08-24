@@ -37,7 +37,7 @@ end
 
 
 % %%%%%%%%%% Segmentation Figure %%%%%%%%%%%%%%%
-figure('Color',[1 1 1], 'Position',[ 1987 547 746  547]);
+figure('Color',[1 1 1]);
 Segmentation = [];
 for j=1:length(iis)
     subplot(length(iis),1,j)    
